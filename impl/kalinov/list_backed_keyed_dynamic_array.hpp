@@ -37,19 +37,19 @@ class ListBackedKeyedDynamicArray {
     auto it = a.begin();
     advance(it, index);
     a.insert(it, value);
-    return ++it;
+    return --it;
   }
 
   key_type InsertAfterKey(key_type key, value_type value) {
     auto it = key;
     a.insert(++it, value);
-    return ++it;
+    return --it;
   }
 
   key_type InsertBeforeKey(key_type key, value_type value) {
     auto it = key;
     a.insert(it, value);
-    return ++it;
+    return --it;
   }
 
   value_type const& Get(key_type key) const { return *key; }
