@@ -11,7 +11,8 @@ using namespace std;
 template<typename T>
 class ListBackedKeyedDynamicArray {
  public:
-  typedef typename list<T>::iterator key_type;  typedef T value_type;
+  typedef typename list<T>::iterator key_type;
+  typedef T value_type;
 
   ListBackedKeyedDynamicArray() {}
 
@@ -52,9 +53,6 @@ class ListBackedKeyedDynamicArray {
     return --it;
   }
 
-  value_type const& Get(key_type key) const { return *key; }
-  value_type& Get(key_type key) { return *key; }
-
   void Remove(int index) {
     auto it = a.begin();
     advance(it, index);
@@ -63,6 +61,17 @@ class ListBackedKeyedDynamicArray {
 
   void RemoveKey(key_type key) {
     a.erase(key);
+  }
+
+  value_type const& Get(key_type key) const { return *key; }
+  value_type& Get(key_type key) { return *key; }
+
+  int GetIndex(key_type key) const {
+    int index = 0;
+    for (; key != a.begin(); --key) {
+      index += 1;
+    }
+    return index;
   }
 
  private:

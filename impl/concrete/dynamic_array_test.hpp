@@ -1,6 +1,7 @@
 #ifndef __IMPL_CONCRETE_DYNAMIC_ARRAY_TEST_HPP__
 #define __IMPL_CONCRETE_DYNAMIC_ARRAY_TEST_HPP__
 
+#include <algorithm>
 #include <chrono>
 #include <functional>
 #include <iostream>
@@ -42,6 +43,8 @@ class DynamicArrayTests : public Tests {
     this->AddTest(
         "DynamicArrayTests::TestConstructAndRemoveAll",
         std::bind(&DynamicArrayTests::TestConstructAndRemoveAll, this));
+    this->AddTest("DynamicArrayTests::TestBinarySearchInsertionSort",
+                  std::bind(&DynamicArrayTests::TestBinarySearchInsertionSort, this));
     this->AddTest(
         "DynamicArrayTests::TestCompareAgainstRecommended1",
         std::bind(&DynamicArrayTests::TestCompareAgainstRecommended, this,
@@ -55,12 +58,18 @@ class DynamicArrayTests : public Tests {
         std::bind(&DynamicArrayTests::TestCompareAgainstRecommended, this,
                   /*seed=*/3));
 
-    AddBenchmark("DynamicArrayTests::BenchmarkInsertThreeRemoveTwo",
-                 std::bind(&DynamicArrayTests::BenchmarkInsertThreeRemoveTwo,
-                           this, placeholders::_1, placeholders::_2));
-    AddBenchmark("DynamicArrayTests::BenchmarkConstructAndAccess",
-                 std::bind(&DynamicArrayTests::BenchmarkConstructAndAccess,
-                           this, placeholders::_1, placeholders::_2));
+    this->AddBenchmark(
+        "DynamicArrayTests::BenchmarkBinarySearchInsertionSort",
+        std::bind(&DynamicArrayTests::BenchmarkBinarySearchInsertionSort, this,
+                  placeholders::_1, placeholders::_2));
+    this->AddBenchmark(
+        "DynamicArrayTests::BenchmarkInsertThreeRemoveTwo",
+        std::bind(&DynamicArrayTests::BenchmarkInsertThreeRemoveTwo, this,
+                  placeholders::_1, placeholders::_2));
+    this->AddBenchmark(
+        "DynamicArrayTests::BenchmarkConstructAndAccess",
+        std::bind(&DynamicArrayTests::BenchmarkConstructAndAccess, this,
+                  placeholders::_1, placeholders::_2));
   }
 
   bool TestSimple() {
@@ -83,40 +92,78 @@ class DynamicArrayTests : public Tests {
   }
 
   bool TestInsertAndRemoveAll() {
-    default_random_engine random(1234);
+    default_random_engine rng(1234);
     DynamicArrayImpl<ValueType> array;
-    InsertRandomElements(100, array, random);
-    RemoveRandomElements(100, array, random);
+    InsertRandomElements(100, &array, &rng);
+    RemoveRandomElements(100, &array, &rng);
     CHECK(array.size() == 0);
     return true;
   }
 
   bool TestConstructAndRemoveAll() {
-    default_random_engine random(1234);
+    default_random_engine rng(1234);
     DynamicArrayImpl<ValueType> array(100);
-    RemoveRandomElements(100, array, random);
+    RemoveRandomElements(100, &array, &rng);
     CHECK(array.size() == 0);
     return true;
   }
 
   bool TestCompareAgainstRecommended(int seed) {
-    default_random_engine random_ref(seed);
-    default_random_engine random_test(seed);
+    default_random_engine rng_ref(seed);
+    default_random_engine rng_test(seed);
     DynamicArray<ValueType> array_ref;
     DynamicArrayImpl<ValueType> array_test;
-    InsertRandomElements(100, array_ref, random_ref);
-    InsertRandomElements(100, array_test, random_test);
+    InsertRandomElements(100, &array_ref, &rng_ref);
+    InsertRandomElements(100, &array_test, &rng_test);
     for (int iter = 0; iter < 10; ++iter) {
-      RemoveRandomElements(10, array_ref, random_ref);
-      RemoveRandomElements(10, array_test, random_test);
-      InsertRandomElements(5, array_ref, random_ref);
-      InsertRandomElements(5, array_test, random_test);
+      RemoveRandomElements(10, &array_ref, &rng_ref);
+      RemoveRandomElements(10, &array_test, &rng_test);
+      InsertRandomElements(5, &array_ref, &rng_ref);
+      InsertRandomElements(5, &array_test, &rng_test);
     }
     CHECK(array_ref.size() == array_test.size());
     for (int i = 0; i < array_ref.size(); ++i) {
       CHECK(array_ref[i].value == array_test[i].value);
     }
     return true;
+  }
+
+  bool TestBinarySearchInsertionSort() {
+    default_random_engine rng(12345);
+    vector<int> numbers;
+    for (int i = 0; i < 1000; ++i) {
+      numbers.push_back(uniform_int_distribution<int>(0, 1000)(rng));
+    }
+    DynamicArrayImpl<int> array;
+    BinarySearchInsertionSort(numbers, &array);
+    CHECK(array.size() == 1000);
+    sort(numbers.begin(), numbers.end());
+    for (int i = 0; i < 1000; ++i) {
+      CHECK(array[i] == numbers[i]);
+    }
+    return true;
+  }
+
+  pair<bool, double> BenchmarkBinarySearchInsertionSort(int level, string* message) {
+    int n = 1000;
+    for (int i = 0; i < level; ++i) n = n * 2;
+    ostringstream oss;
+    oss << "(n = " << n << ")";
+    *message = oss.str();
+
+    default_random_engine rng(1337);
+    vector<int> numbers;
+    for (int i = 0; i < n; ++i) {
+      numbers.push_back(uniform_int_distribution<int>(0, n)(rng));
+    }
+    auto t1 = chrono::high_resolution_clock::now();
+
+    DynamicArrayImpl<int> array;
+    BinarySearchInsertionSort(numbers, &array);
+
+    auto t2 = chrono::high_resolution_clock::now();
+    auto runtime = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+    return make_pair(runtime.count() < 1.0, runtime.count());
   }
 
   pair<bool, double> BenchmarkInsertThreeRemoveTwo(int level, string* message) {
@@ -126,12 +173,13 @@ class DynamicArrayTests : public Tests {
     oss << "(iters = " << n << ")";
     *message = oss.str();
 
-    default_random_engine random(1337);
+    default_random_engine rng(1337);
     auto t1 = chrono::high_resolution_clock::now();
+
     DynamicArrayImpl<ValueType> array;
     for (int i = 0; i < n; ++i) {
-      InsertRandomElements(3, array, random);
-      InsertRandomElements(2, array, random);
+      InsertRandomElements(3, &array, &rng);
+      InsertRandomElements(2, &array, &rng);
       array[i].value = i;
     }
 
@@ -148,42 +196,59 @@ class DynamicArrayTests : public Tests {
     oss << "(n = " << n << ", iters = " << iters << ")";
     *message = oss.str();
 
-    default_random_engine random(1337);
+    default_random_engine rng(1337);
     auto t1 = chrono::high_resolution_clock::now();
+
     DynamicArrayImpl<ValueType> array(n);
     long long sum = 0;
     for (int i = 0; i < iters; ++i) {
-      int index = uniform_int_distribution<int>(0, n - 1)(random);
+      int index = uniform_int_distribution<int>(0, n - 1)(rng);
       sum += array[index].value;
     }
-    // Use the sum, so compiler wouldn't optimize it away.
-    if (sum != 0) *message = *message + " ignore_me ";
-
+    if (sum != 0) {
+      throw "The code is wrong.";
+    }
     auto t2 = chrono::high_resolution_clock::now();
     auto runtime = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
     return make_pair(runtime.count() < 1.0, runtime.count());
   }
 
-  template <typename A>
-  void InsertRandomElements(int n, A& array, default_random_engine& random) {
-    auto index_generator = [&array, &random]() {
-      return uniform_int_distribution<int>(0, array.size())(random);
-    };
-    auto value_generator = [&random]() {
-      return uniform_int_distribution<int>(0, 1000000)(random);
-    };
-    for (int i = 0; i < n; ++i) {
-      array.Insert(index_generator(), ValueType(value_generator()));
+  void BinarySearchInsertionSort(vector<int> const& numbers,
+                                 DynamicArrayImpl<int>* array) {
+    for (int x : numbers) {
+      int lo = 0, hi = array->size();
+      while (lo != hi) {
+        int mid = (lo + hi) / 2;
+        if ((*array)[mid] >= x) {
+          hi = mid;
+        } else {
+          lo = mid + 1;
+        }
+      }
+      array->Insert(lo, x);
     }
   }
 
   template <typename A>
-  void RemoveRandomElements(int n, A& array, default_random_engine& random) {
-    auto index_generator = [&array, &random]() {
-      return uniform_int_distribution<int>(0, array.size() - 1)(random);
+  void InsertRandomElements(int n, A* array, default_random_engine* rng) {
+    auto index_generator = [array, rng]() {
+      return uniform_int_distribution<int>(0, array->size())(*rng);
+    };
+    auto value_generator = [rng]() {
+      return uniform_int_distribution<int>(0, 1000000)(*rng);
     };
     for (int i = 0; i < n; ++i) {
-      array.Remove(index_generator());
+      array->Insert(index_generator(), ValueType(value_generator()));
+    }
+  }
+
+  template <typename A>
+  void RemoveRandomElements(int n, A* array, default_random_engine* rng) {
+    auto index_generator = [array, rng]() {
+      return uniform_int_distribution<int>(0, array->size() - 1)(*rng);
+    };
+    for (int i = 0; i < n; ++i) {
+      array->Remove(index_generator());
     }
   }
 };
