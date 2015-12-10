@@ -27,10 +27,10 @@
 namespace concepts {
 
 template <class T>
-struct Array {
+struct IsArray {
   typedef typename T::value_type value_type;
 
-  BOOST_CONCEPT_USAGE(Array) {
+  BOOST_CONCEPT_USAGE(IsArray) {
     BOOST_CONCEPT_ASSERT((boost::Assignable<value_type>));
     BOOST_CONCEPT_ASSERT((boost::DefaultConstructible<value_type>));
 
@@ -44,10 +44,10 @@ struct Array {
 };
 
 template <class T>
-struct MutableArray : Array<T> {
+struct IsMutableArray : IsArray<T> {
   typedef typename T::value_type value_type;
 
-  BOOST_CONCEPT_USAGE(MutableArray) {
+  BOOST_CONCEPT_USAGE(IsMutableArray) {
     BOOST_CONCEPT_ASSERT((boost::CopyConstructible<value_type>));
     array[0] = value;
   }
@@ -56,10 +56,10 @@ struct MutableArray : Array<T> {
 };
 
 template <class T>
-struct InsertableArray : Array<T> {
+struct IsInsertableArray : IsArray<T> {
   typedef typename T::value_type value_type;
 
-  BOOST_CONCEPT_USAGE(InsertableArray) {
+  BOOST_CONCEPT_USAGE(IsInsertableArray) {
     BOOST_CONCEPT_ASSERT((boost::CopyConstructible<value_type>));
     array.Insert(0, value);
   }
@@ -68,10 +68,10 @@ struct InsertableArray : Array<T> {
 };
 
 template <class T>
-struct RemovableArray : Array<T> {
+struct IsRemovableArray : IsArray<T> {
   typedef typename T::value_type value_type;
 
-  BOOST_CONCEPT_USAGE(RemovableArray) {
+  BOOST_CONCEPT_USAGE(IsRemovableArray) {
     array.Remove(0);
   }
   T array;

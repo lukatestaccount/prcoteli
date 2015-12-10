@@ -15,13 +15,15 @@ class VectorBackedDynamicArray {
   VectorBackedDynamicArray() {}
   VectorBackedDynamicArray(int n) : a(n) {}
   int size() const { return a.size(); }
-  const T& operator[](int index) const { return a[index]; }
-  T& operator[](int index) { return a[index]; }
-  void Insert(int index, T value) { a.insert(a.begin() + index, value); }
+  value_type const& operator[](int index) const { return a[index]; }
+  value_type& operator[](int index) { return a[index]; }
+  void Insert(int index, value_type value) {
+    a.insert(a.begin() + index, value);
+  }
   void Remove(int index) { a.erase(a.begin() + index); }
 
  private:
-  vector<T> a;
+  vector<value_type> a;
 };
 
 }  // namespace kalinov
