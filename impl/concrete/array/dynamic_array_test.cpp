@@ -4,6 +4,7 @@
 // A list of DynamicArray implementations:
 #include "impl/kalinov/array/vector_backed_dynamic_array.hpp"
 #include "impl/kalinov/array/list_backed_keyed_dynamic_array.hpp"
+#include "impl/test/array/list_backed_keyed_dynamic_array.hpp"
 
 namespace testing {
 
