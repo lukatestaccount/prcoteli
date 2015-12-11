@@ -1,0 +1,47 @@
+Programing Contest Template Library - PrCoTeLi
+
+0) If you don't have a github account yet, set up one at https://github.com/join.
+
+1) Navigate to https://github.com/lukakalinovcic/prcoteli, and click on the Fork button in the upper right corner. You should now see the code at https://github.com/<youraccount>/prcoteli.
+
+2) Open the terminal and position yourself into a local working directory. Type "git clone https://github.com/<youraccount>/prcoteli.git". You should now see the "prcoteli" directory. This is your local copy of the code.
+
+3) Concepts:
+This projects tries to capture data structures and algorithms that often appear in programming competitions as concepts, and implement those concepts as a template library.
+
+concepts/abstract/... contains definitions for high level concepts that don't have a concrete implementation.
+For example, concepts/abstract/array/array.hpp specifies what methods the class that implements IsInsertableArray must have, but you can't instantiate a class called InsertableArray.
+
+concepts/concrete/... contains definitions for concepts that we implement. The recommended implementation for a concept defined in concept/concrete/<foo>/<bar>.hpp is located in impl/concrete/<foo>/<bar>.hpp.
+
+Subscribe to https://groups.google.com/forum/#!forum/prcoteli-announce for announcements whenever a new concept is posted.
+Discuss anything related to the concept at https://groups.google.com/forum/#!forum/prcoteli-discuss.
+
+4) Your contribution:
+This is an open source project, which means that contributions from other people are welcome, and crucial to success. In fact, the recommended implementation will always refer to somebody's implementation. You may implement the concept just for practice, or you may implement it to be the fastest one available and become the recommended implementation for everybody else to use.
+
+Place your implementation into your own directory, e.g. impl/<yourusername>/concrete/<foo>/<bar>.hpp.
+
+Most concepts will be put up with test and benchmark suite defined in impl/concrete/<foo>/<bar>_test.hpp.
+
+To add your implementation to a test suite edit impl/concrete/<foo>/<bar>.cpp.
+You should see #include directives for every existing implementation at the top. Add your implementation there.
+Below, you should TESTER_ADD_IMPLEMENTATION lines where tests for existing implentations are instantiated. Add your implementation there as well.
+That's it.
+You can now run the test using the run_test.sh script in the root directory.
+run_test.sh concrete/dynamic_array
+To run tests for your implementation only type:
+run_test.sh concrete/dynamic_array <yourusername>
+
+Once tests pass, you can run benchmarks to see how it performs against other implementations:
+run_benchmarh.sh concrete/dynamic_array
+
+To see every file that you have modified, added or removed, type:
+  git status
+For every added file type:
+  git add path/to/file
+Commit changes by typing:
+  git commit -m 'Some message describing the change' -a
+Push changes to your github branch by typing:
+  git push -u origin master
+You should now see changes at https://github.com/<youraccount>/prcoteli. On the right side you can find the "Compare" link, which will once again show your contribution.
