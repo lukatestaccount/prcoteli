@@ -19,8 +19,8 @@
 // RemovableArray is an Array with these additional properties:
 // * Has the Remove method that accepts the index of an element to remove.
 
-#ifndef __CONCEPTS_ABSTRACT_ARRAY_HPP__
-#define __CONCEPTS_ABSTRACT_ARRAY_HPP__
+#ifndef __CONCEPTS_ABSTRACT_ARRAY_ARRAY_HPP__
+#define __CONCEPTS_ABSTRACT_ARRAY_ARRAY_HPP__
 
 #include "boost/concept_check.hpp"
 
@@ -79,4 +79,4 @@ struct IsRemovableArray : IsArray<T> {
 
 }  // namespace concepts
 
-#endif  // __CONCEPTS_ABSTRACT_ARRAY_HPP__
+#endif  // __CONCEPTS_ABSTRACT_ARRAY_ARRAY_HPP__

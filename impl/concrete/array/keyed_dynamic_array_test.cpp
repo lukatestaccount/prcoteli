@@ -1,8 +1,8 @@
-#include "impl/concrete/keyed_dynamic_array_test.hpp"
+#include "impl/concrete/array/keyed_dynamic_array_test.hpp"
 #include "testing/tester.hpp"
 
 // A list of KeyedDynamicArray implementations:
-#include "impl/kalinov/list_backed_keyed_dynamic_array.hpp"
+#include "impl/kalinov/array/list_backed_keyed_dynamic_array.hpp"
 
 namespace testing {
 

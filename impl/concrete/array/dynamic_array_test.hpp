@@ -1,5 +1,5 @@
-#ifndef __IMPL_CONCRETE_DYNAMIC_ARRAY_TEST_HPP__
-#define __IMPL_CONCRETE_DYNAMIC_ARRAY_TEST_HPP__
+#ifndef __IMPL_CONCRETE_ARRAY_DYNAMIC_ARRAY_TEST_HPP__
+#define __IMPL_CONCRETE_ARRAY_DYNAMIC_ARRAY_TEST_HPP__
 
 #include <algorithm>
 #include <chrono>
@@ -11,8 +11,8 @@
 #include <vector>
 
 #include "boost/concept_check.hpp"
-#include "concepts/concrete/dynamic_array.hpp"
-#include "impl/concrete/dynamic_array.hpp"
+#include "concepts/concrete/array/dynamic_array.hpp"
+#include "impl/concrete/array/dynamic_array.hpp"
 #include "testing/tests.hpp"
 
 namespace testing {
@@ -255,4 +255,4 @@ class DynamicArrayTests : public Tests {
 
 }  // testing
 
-#endif  // __IMPL_CONCRETE_DYNAMIC_ARRAY_TEST_HPP__
+#endif  // __IMPL_CONCRETE_ARRAY_DYNAMIC_ARRAY_TEST_HPP__

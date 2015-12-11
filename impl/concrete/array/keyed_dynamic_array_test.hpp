@@ -1,5 +1,5 @@
-#ifndef __IMPL_CONCRETE_KEYED_DYNAMIC_ARRAY_TEST_HPP__
-#define __IMPL_CONCRETE_KEYED_DYNAMIC_ARRAY_TEST_HPP__
+#ifndef __IMPL_CONCRETE_ARRAY_KEYED_DYNAMIC_ARRAY_TEST_HPP__
+#define __IMPL_CONCRETE_ARRAY_KEYED_DYNAMIC_ARRAY_TEST_HPP__
 
 #include <chrono>
 #include <functional>
@@ -10,9 +10,9 @@
 #include <vector>
 
 #include "boost/concept_check.hpp"
-#include "concepts/concrete/keyed_dynamic_array.hpp"
-#include "impl/concrete/keyed_dynamic_array.hpp"
-#include "impl/concrete/dynamic_array_test.hpp"
+#include "concepts/concrete/array/keyed_dynamic_array.hpp"
+#include "impl/concrete/array/keyed_dynamic_array.hpp"
+#include "impl/concrete/array/dynamic_array_test.hpp"
 #include "testing/tests.hpp"
 
 namespace testing {
@@ -213,4 +213,4 @@ class KeyedDynamicArrayTests : public DynamicArrayTests<KeyedDynamicArrayImpl> {
 
 }  // testing
 
-#endif  // __IMPL_KEYED_CONCRETE_DYNAMIC_ARRAY_TEST_HPP__
+#endif  // __IMPL_KEYED_CONCRETE_ARRAY_DYNAMIC_ARRAY_TEST_HPP__

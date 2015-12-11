@@ -1,9 +1,9 @@
-#include "impl/concrete/dynamic_array_test.hpp"
+#include "impl/concrete/array/dynamic_array_test.hpp"
 #include "testing/tester.hpp"
 
 // A list of DynamicArray implementations:
-#include "impl/kalinov/vector_backed_dynamic_array.hpp"
-#include "impl/kalinov/list_backed_keyed_dynamic_array.hpp"
+#include "impl/kalinov/array/vector_backed_dynamic_array.hpp"
+#include "impl/kalinov/array/list_backed_keyed_dynamic_array.hpp"
 
 namespace testing {
 
